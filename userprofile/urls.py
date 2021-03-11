@@ -15,6 +15,9 @@ urlpatterns += router.urls
 router.register(r'address', views.AddressViewSet)
 urlpatterns += router.urls
 
+router.register(r'offers', views.OfferViewSet, basename='offers')
+urlpatterns += router.urls
+
 urlpatterns += [
     path('hello/', views.HelloView.as_view(), name='hello')
 ]

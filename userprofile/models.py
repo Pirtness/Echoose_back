@@ -10,6 +10,9 @@ LOCATION_TYPES = (('Remotely', 'Удаленно'), ("Student's home", "У уч�
 SERVICE_TYPES = (('homework', 'Домашняя работа'), ('exam', 'Экзамен'),
     ('improve', 'Улучшить знания'), ('topic', 'Разобрать тему'))
 
+STATUS = (('blocked', 'Заблокирован'), ('Match', 'Совпадение'),
+    ('Like', 'Понравился'), ('Archived', 'Архивирован'))
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     isMale = models.BooleanField(null = True) #True = male, False = female
@@ -32,13 +35,18 @@ class ServiceType(models.Model):
     name = models.CharField(max_length = 100, null = False)
 
 class Service(models.Model):
-    address = models.ForeignKey('Address', related_name='services_list', on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=100, null=False, blank=False)
+    address = models.ForeignKey('Address', related_name='services_list', null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='services_list', on_delete=models.CASCADE)
     location = models.CharField(choices=LOCATION_TYPES, default='Any', max_length=200)
     category = models.ForeignKey('Category', related_name='services_list', on_delete=models.CASCADE)
     description = models.CharField(max_length=1000, null=True, blank=True)
-    price = models.IntegerField()
+    price = models.IntegerField(null = True)
     isTutor = models.BooleanField(null=False) #True = tutor, False = student
     types = models.ManyToManyField(ServiceType, default=[])
     isActive = models.BooleanField(null=False, default=True)
+
+class Relation(models.Model):
+    service1 = models.ForeignKey('Service', related_name='+', on_delete=models.CASCADE)
+    service2 = models.ForeignKey('Service', related_name='+', on_delete=models.CASCADE)
+    status1 = models.CharField(choices=STATUS, max_length=200, null=True)
+    status2 = models.CharField(choices=STATUS, max_length=200, null=True)

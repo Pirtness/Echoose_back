@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from userprofile.models import Profile, Category, ServiceType, Service, Address
+from userprofile.models import Profile, Category, ServiceType, Service, Address, Relation
 
 
 class ServiceTypeSerializer(serializers.ModelSerializer):
@@ -52,6 +52,14 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = '__all__'
 
+class RelationSerializer(serializers.ModelSerializer):
+    service1 = serializers.ReadOnlyField(source='service1.id')
+    service2 = serializers.ReadOnlyField(source='service2.id')
+
+    class Meta:
+        model = Relation
+        fields = '__all__'
+
 class UserSerializer(serializers.ModelSerializer):
     addresses_list = AddressSerializer(many=True)
     services_list = ServiceSerializer(many=True)
@@ -93,6 +101,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
+        #print('AAAAAAAAAAa')
         user = UserSerializer.create(UserSerializer(), validated_data=validated_data.get('credentials'))
 
         try:
@@ -101,6 +110,7 @@ class ProfileSerializer(serializers.ModelSerializer):
                 isMale=validated_data.get('isMale'),
                 age=validated_data.get('age')
             )
+            #print(profile)
         except Exception:
             user.delete()
             raise
