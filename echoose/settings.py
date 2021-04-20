@@ -27,7 +27,7 @@ SECRET_KEY = 'r$oj$7c%q)5vgcdqoq65t5g%ox#-y_@%tlvsrkph!+b0h%s_d5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['f573116b63fc.ngrok.io', '127.0.0.1']
+ALLOWED_HOSTS = ['0fc6db6e18bb.ngrok.io', '127.0.0.1']
 
 
 # Application definition
@@ -44,7 +44,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
     'userprofile.apps.UserprofileConfig',
+    #'djangochannelsrestframework',
+    'channels',
+
 ]
+
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -53,6 +58,17 @@ REST_FRAMEWORK = {
     ],
 }
 
+ASGI_APPLICATION = 'echoose.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [("127.0.0.1", 6379)],
+            #"symmetric_encryption_keys": [SECRET_KEY],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -121,6 +137,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
+#
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+DATETIME_FORMAT = '%Y-%m-%d %H:%m'
 
 LANGUAGE_CODE = 'en-us'
 
@@ -130,7 +150,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

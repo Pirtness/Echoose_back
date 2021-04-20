@@ -11,6 +11,27 @@ import os
 
 from django.core.asgi import get_asgi_application
 
+
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'echoose.settings')
 
-application = get_asgi_application()
+from djangochannelsrestframework.consumers import view_as_consumer
+from userprofile import views
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+from django.conf.urls import url
+from django.urls import path
+
+websockets = URLRouter([
+    path(
+        "ws/dialog", views.DialogViewSet.as_asgi(),
+        name="dialog",
+    ),
+])
+
+application = ProtocolTypeRouter({
+    "websocket": websockets,
+})
+
+
+#application = get_asgi_application()

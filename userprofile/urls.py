@@ -3,6 +3,12 @@ from userprofile import views
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
+
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+
+
 
 router = DefaultRouter()
 
@@ -18,8 +24,11 @@ urlpatterns += router.urls
 router.register(r'offers', views.OfferViewSet, basename='offers')
 urlpatterns += router.urls
 
-urlpatterns += [
-    path('hello/', views.HelloView.as_view(), name='hello')
-]
+router.register(r'dialog', views.DialogViewSet, basename='dialog')
+urlpatterns += router.urls
 
+
+
+
+#urlpatterns += application.websocket.urls
 urlpatterns += static(settings.IMAGES_URL, document_root=settings.IMAGES_ROOT)
